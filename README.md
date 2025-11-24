@@ -1,28 +1,119 @@
-# Asistencia-docente
-Un software para manejar la asistencia de los docentes en una institucion educativa
+# Sistema de Gestión de Asistencias – Django
+Este proyecto es una aplicación web desarrollada en Python, utilizando el framework Django, cuya finalidad es gestionar docentes, asistencias, programas y semestres académicos dentro de una institución educativa.
+Incluye módulos para:
+•	Registro y autenticación de usuarios.
+•	Gestión de docentes.
+•	Registro de asistencias.
+•	Consulta de porcentajes de asistencia.
+•	Administración de programas académicos.
+•	Administración de semestres.
 
-La institución educativa actualmente lleva el control de asistencia de los docentes mediante planillas físicas en papel.
-En estas planillas, cada profesor registra manualmente su nombre, la fecha y hora de ingreso, la fecha y hora de salida, la materia que va a dictar, el tema de la clase, el curso o grado asignado, el día y la jornada.
+# Requisitos Previos
+Antes de ejecutar el proyecto, asegúrate de tener instalado:
+•	Python 3.10+
+•	pip (gestor de paquetes de Python)
+•	Virtualenv (opcional pero recomendado)
 
-Este método genera diversas dificultades, tales como:
+# Instalación y Ejecución del Proyecto
+Sigue estos pasos para ejecutar correctamente la aplicación:
 
-•	Posible pérdida o deterioro de las planillas físicas.
+1. Clonar el repositorio
+git clone https://github.com/usuario/tu-repositorio.git
+cd tu-repositorio
 
-•	Retrasos al momento de consultar la información, ya que los datos no se encuentran digitalizados.
+2. Crear y activar entorno virtual (opcional, recomendado)
+En Windows:
+python -m venv venv
+venv\Scripts\activate
+En Linux / MacOS:
+python3 -m venv venv
+source venv/bin/activate
 
-•	Complicaciones para generar reportes, por ejemplo, la asistencia mensual de un docente.
+3. Instalar dependencias del proyecto
+pip install -r requirements.txt
+Si no tienes un archivo requirements.txt, puedes generarlo con:
+pip freeze > requirements.txt
 
-•	Falta de seguridad en los registros, pues pueden ser manipulados con facilidad.
+4. Realizar migraciones
+Django utiliza migraciones para crear las tablas en la base de datos SQLite.
+python manage.py migrate
 
-Por estas razones, la institución necesita implementar un software que modernice y optimice este proceso. Con el nuevo sistema se busca:
+5. Ejecutar el servidor
+Este comando inicia la aplicación en el navegador:
+python manage.py runserver
+Luego abre:
+http://127.0.0.1:8000/
 
-•	Automatizar el registro de asistencia de los docentes.
+# Estructura del Proyecto
+AsistenciaDocente/
+│
+│── db.sqlite3
+│── manage.py
+│── estructura.txt
+│
+├── app/
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── __init__.py
+│   │
+│   ├── migrations/
+│   │   ├── 0001_initial.py
+│   │   ├── 0002_alter_asistencia_fecha.py
+│   │   ├── 0003_programa_semestre.py
+│   │   ├── 0004_asignatura.py
+│   │   ├── 0005_alter_asistencia_tema.py
+│   │   ├── __init__.py
+│   │
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── styles.css
+│   │   ├── img/
+│   │   │   ├── logo.png
+│   │   │   └── usuario.png
+│   │   └── js/
+│   │       └── scripts.js
+│   │
+│   └── templates/
+│       ├── base.html
+│       ├── login.html
+│       ├── docentes.html
+│       ├── registrar_docente.html
+│       ├── asistencia.html
+│       ├── porcentaje_asistencia.html
+│       ├── programas.html
+│       ├── semestre.html
+│       └── error.html
+│
+└── asistencia_docente/
+    ├── __init__.py
+    ├── asgi.py
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
 
-•	Permitir al coordinador y personal administrativo consultar y filtrar registros por fecha, docente, jornada o programa académico.
+# Tecnologías Usadas
+•	Python
+•	Django
+•	SQLite3
+•	HTML5 / CSS3 / Bootstrap 5
 
-•	Generar reportes de asistencia individuales o generales en rangos de fecha definidos (por ejemplo, semanal o mensual).
+# Comandos Útiles
+Crear superusuario:
+python manage.py createsuperuser
+Limpiar migraciones (si es necesario):
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+python manage.py makemigrations
+python manage.py migrate
 
-•	Almacenar la información en una base de datos centralizada, que permita realizar consultas rápidas, seguras y confiables.
+# Imágenes y Evidencias
+Todas las capturas de pantalla del sistema se encuentran documentadas en el informe y pueden ser añadidas aquí si el repositorio lo requiere.
+
+# Licencia
+Este proyecto puede ser usado con fines educativos y académicos.
 
 
-De esta manera, el software de asistencia docente solucionará los problemas actuales de control y organización, mejorará la trazabilidad de los registros y optimizará el tiempo destinado a la gestión académica y administrativa.
