@@ -1,0 +1,134 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Programas{% endblock %}
+
+{% block contenido %}
+
+<style>
+    /* === ESTILO VERDE ELEGANTE === */
+
+    h2.titulo-verde {
+        font-size: 28px;
+        font-weight: 600;
+        color: #14532d;
+    }
+
+    .btn-verde {
+        background: linear-gradient(90deg, #4ade80, #22c55e);
+        color: #ffffff !important;
+        border: none;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 16px;
+        transition: 0.2s ease-in-out;
+    }
+
+    .btn-verde:hover {
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+        transform: translateY(-2px);
+    }
+
+    /* Botón Editar */
+    .btn-editar {
+        background-color: #86efac;
+        border: none;
+        color: #14532d !important;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 6px 12px;
+    }
+    .btn-editar:hover {
+        background-color: #4ade80;
+        color: #0f3f23 !important;
+    }
+
+    /* Botón Eliminar */
+    .btn-eliminar {
+        background-color: #fca5a5;
+        border: none;
+        color: #7f1d1d !important;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 6px 12px;
+    }
+    .btn-eliminar:hover {
+        background-color: #f87171;
+        color: #450a0a !important;
+    }
+
+    /* Contenedor de los botones */
+    .acciones {
+        display: flex;
+        gap: 10px;        /* Espacio entre los botones */
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Tabla */
+    .tabla-verde {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #d3e8d9;
+        background-color: #ffffff;
+    }
+    .tabla-verde thead {
+        background-color: #d1fae5;
+        color: #14532d;
+        font-weight: 600;
+    }
+    .tabla-verde tbody tr:hover {
+        background-color: #f0fdf4;
+    }
+    .tabla-verde td, .tabla-verde th {
+        padding: 14px;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="titulo-verde">📘 Programas Académicos</h2>
+
+
+    <a href="{% url 'programa_nuevo' %}" class="btn-verde">
+        + Nuevo Programa
+    </a>
+</div>
+
+<div class="table-responsive">
+    <table class="table tabla-verde table-hover align-middle">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Código</th>
+                <th style="width: 180px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in programas %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.codigo|default:"-" }}</td>
+                <td>
+                    <div class="acciones">
+                        <a href="{% url 'programa_editar' p.id %}" class="btn-editar btn-sm">Editar</a>
+
+                        <a href="{% url 'programa_eliminar' p.id %}" 
+                           class="btn-eliminar btn-sm"
+                           onclick="return confirm('¿Seguro que deseas eliminar este programa?');">
+                            Eliminar
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center py-3">
+                    No hay programas registrados.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

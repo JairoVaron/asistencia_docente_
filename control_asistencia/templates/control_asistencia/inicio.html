@@ -1,0 +1,56 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Inicio - Sistema de Asistencia{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h2 class="mb-3">Panel Principal</h2>
+    <p>Bienvenido al sistema de control de asistencia docente. Aquí podrás navegar a las secciones principales.</p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mt-3">
+        <!-- Docentes -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Docentes</h5>
+                    <p class="card-text">Ver y administrar los docentes registrados.</p>
+                    <a href="{% url 'docentes' %}" class="btn btn-primary">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asistencias -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Asistencias</h5>
+                    <p class="card-text">Registrar y consultar asistencias por docente, fecha o semestre.</p>
+                    <a href="{% url 'asistencias' %}" class="btn btn-success">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programas -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Programas</h5>
+                    <p class="card-text">Gestionar los programas académicos.</p>
+                    <a href="{% url 'programas' %}" class="btn btn-warning text-dark">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Semestres -->
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Semestres</h5>
+                    <p class="card-text">Crear y administrar los semestres académicos.</p>
+                    <a href="{% url 'semestres' %}" class="btn btn-info text-white">Ir al módulo</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

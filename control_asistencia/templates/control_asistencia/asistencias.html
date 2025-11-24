@@ -1,0 +1,256 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Asistencias{% endblock %}
+
+{% block contenido %}
+
+<style>
+    /* ========================================
+       ESTILO VERDE ELEGANTE Y UNIFICADO
+       ======================================== */
+
+    h2.titulo-verde {
+        color: var(--text-dark);
+        font-weight: 700;
+    }
+
+    /* Botón principal */
+    .btn-agregar {
+        background: linear-gradient(90deg, #4ade80, #22c55e);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 10px;
+        transition: 0.25s;
+    }
+    .btn-agregar:hover {
+        background: linear-gradient(90deg, #22c55e, #16a34a);
+        transform: translateY(-2px);
+    }
+
+    /* Contenedor filtros */
+    .filtros-container {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        margin-bottom: 30px;
+        border: 1px solid #dbece1;
+    }
+
+    .filtros-container .form-control,
+    .filtros-container .form-select {
+        border-radius: 10px;
+        height: 45px;
+        border: 1px solid #cce3d4;
+    }
+
+    .btn-filtrar {
+        background: #22c55e;
+        border: none;
+        height: 45px;
+        font-weight: 600;
+        border-radius: 10px;
+        color: #fff;
+        transition: 0.25s;
+    }
+    .btn-filtrar:hover {
+        background: #1a9e48;
+        transform: translateY(-2px);
+    }
+
+    /* TABLA VERDE ELEGANTE */
+    .tabla-verde {
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #d3e8d9;
+    }
+
+    .tabla-verde thead {
+        background: #d1fae5;
+        color: #14532d;
+        font-weight: 700;
+    }
+
+    .tabla-verde tbody tr:hover {
+        background-color: #f1fdf4;
+    }
+
+    .tabla-verde td,
+    .tabla-verde th {
+        padding: 14px;
+        vertical-align: middle;
+    }
+
+    /* Botones acciones */
+    .btn-editar {
+        background-color: #86efac;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        color: #14532d;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+    .btn-editar:hover {
+        background-color: #4ade80;
+        color: #0f3f23;
+    }
+
+    .btn-eliminar {
+        background-color: #fca5a5;
+        border: none;
+        padding: 6px 14px;
+        border-radius: 8px;
+        color: #7f1d1d;
+        font-weight: 600;
+    }
+    .btn-eliminar:hover {
+        background-color: #f87171;
+        color: #450a0a;
+    }
+</style>
+
+
+<!-- TÍTULO + BOTÓN -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="titulo-verde">📋 Asistencias de Docentes</h2>
+
+    <a href="{% url 'asistencia_nueva' %}" class="btn-agregar">
+        + Registrar Asistencia
+    </a>
+</div>
+
+
+<!-- FILTROS -->
+<div class="filtros-container">
+    <form method="get" class="row g-3">
+
+        <div class="col-md-2">
+            <input type="date" name="desde" value="{{ request.GET.desde }}"
+                   class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <input type="date" name="hasta" value="{{ request.GET.hasta }}"
+                   class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <select name="docente" class="form-select">
+                <option value="">Todos los docentes</option>
+                {% for d in docentes %}
+                    <option value="{{ d.id }}" {% if request.GET.docente == d.id|stringformat:"s" %}selected{% endif %}>
+                        {{ d.nombre }} {{ d.apellido }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="programa" class="form-select">
+                <option value="">Todos los programas</option>
+                {% for p in programas %}
+                    <option value="{{ p.id }}" {% if request.GET.programa == p.id|stringformat:"s" %}selected{% endif %}>
+                        {{ p.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="semestre" class="form-select">
+                <option value="">Todos los semestres</option>
+                {% for s in semestres %}
+                    <option value="{{ s.id }}" {% if request.GET.semestre == s.id|stringformat:"s" %}selected{% endif %}>
+                        {{ s.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" name="materia" placeholder="Materia..."
+                   value="{{ request.GET.materia }}" class="form-control">
+        </div>
+
+        <div class="col-md-2">
+            <select name="jornada" class="form-select">
+                <option value="">Todas las jornadas</option>
+                <option value="mañana" {% if request.GET.jornada == "mañana" %}selected{% endif %}>Mañana</option>
+                <option value="tarde" {% if request.GET.jornada == "tarde" %}selected{% endif %}>Tarde</option>
+                <option value="noche" {% if request.GET.jornada == "noche" %}selected{% endif %}>Noche</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <select name="estado" class="form-select">
+                <option value="">Todos</option>
+                <option value="presente" {% if request.GET.estado == "presente" %}selected{% endif %}>Presente</option>
+                <option value="ausente" {% if request.GET.estado == "ausente" %}selected{% endif %}>Ausente</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn-filtrar w-100">
+                Filtrar
+            </button>
+        </div>
+
+    </form>
+</div>
+
+
+<!-- TABLA ASISTENCIAS -->
+<div class="table-responsive">
+<table class="table tabla-verde table-hover align-middle">
+    <thead>
+        <tr>
+            <th>Docente</th>
+            <th>Fecha</th>
+            <th>Materia</th>
+            <th>Tema</th>
+            <th>Entrada</th>
+            <th>Salida</th>
+            <th>Presente</th>
+            <th>Semestre</th>
+            <th>Comentario</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for a in asistencias %}
+        <tr>
+            <td>{{ a.docente }}</td>
+            <td>{{ a.fecha }}</td>
+            <td>{{ a.materia|default:"-" }}</td>
+            <td>{{ a.tema|default:"-" }}</td>
+            <td>{{ a.hora_entrada|default:"-" }}</td>
+            <td>{{ a.hora_salida|default:"-" }}</td>
+            <td>{{ a.presente|yesno:"Sí,No" }}</td>
+            <td>{{ a.semestre|default:"-" }}</td>
+            <td>{{ a.comentario|default:"-" }}</td>
+            <td class="text-center">
+                <a href="{% url 'asistencia_editar' a.id %}" class="btn-editar btn-sm">Editar</a>
+                <a href="{% url 'asistencia_eliminar' a.id %}"
+                   class="btn-eliminar btn-sm"
+                   onclick="return confirm('¿Seguro que deseas eliminar este registro de asistencia?');">
+                   Eliminar
+                </a>
+            </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+            <td colspan="10" class="text-center py-3 text-muted">
+                No se encontraron registros.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% endblock %}

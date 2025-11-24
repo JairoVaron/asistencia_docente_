@@ -1,0 +1,153 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Estadísticas{% endblock %}
+
+{% block contenido %}
+
+<style>
+    /* === ESTILO VERDE SUAVE === */
+
+    .titulo-pagina {
+        font-size: 28px;
+        font-weight: 600;
+        color: #14532d; /* verde oscuro */
+        margin-bottom: 25px;
+    }
+
+    .card-elegante {
+        border-radius: 16px;
+        border: 1px solid #dbebdf;
+        background-color: #ffffff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        margin-bottom: 28px;
+    }
+
+    .card-elegante:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header-verde {
+        background: linear-gradient(90deg, #4ade80, #22c55e);
+        padding: 14px 20px;
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 18px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <h2 class="titulo-pagina">📊 Estadísticas de Asistencias</h2>
+
+    <!-- 1. Presente vs Ausente -->
+    <div class="card-elegante">
+        <div class="card-header-verde">Asistencias vs Ausencias</div>
+        <div class="card-body">
+            <canvas id="grafico_asistencias" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- 2. Asistencias por día -->
+    <div class="card-elegante">
+        <div class="card-header-verde">Asistencias por día</div>
+        <div class="card-body">
+            <canvas id="grafico_dias" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- 3. Top 10 Docentes -->
+    <div class="card-elegante">
+        <div class="card-header-verde">Top 10 Docentes con Más Asistencias</div>
+        <div class="card-body">
+            <canvas id="grafico_docentes" height="100"></canvas>
+        </div>
+    </div>
+
+    <!-- 4. Asistencias por Programa -->
+    <div class="card-elegante">
+        <div class="card-header-verde">Asistencias por Programa Académico</div>
+        <div class="card-body">
+            <canvas id="grafico_programas" height="100"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// === 1. Presentes vs Ausentes ===
+new Chart(document.getElementById('grafico_asistencias'), {
+    type: 'pie',
+    data: {
+        labels: ['Presentes', 'Ausentes'],
+        datasets: [{
+            data: [{{ total_presentes }}, {{ total_ausentes }}],
+            backgroundColor: ['#22c55e', '#f87171']  // verde / rojo suave
+        }]
+    }
+});
+
+// === 2. Asistencias por día ===
+new Chart(document.getElementById('grafico_dias'), {
+    type: 'line',
+    data: {
+        labels: [
+            {% for a in asistencias_por_dia %}"{{ a.fecha }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Asistencias',
+            data: [
+                {% for a in asistencias_por_dia %}{{ a.total }},{% endfor %}
+            ],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(34, 197, 94, 0.2)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true
+        }]
+    }
+});
+
+// === 3. Top Docentes ===
+new Chart(document.getElementById('grafico_docentes'), {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for d in asistencias_por_docente %}"{{ d.nombre }} {{ d.apellido }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Total asistencias',
+            data: [
+                {% for d in asistencias_por_docente %}{{ d.total }},{% endfor %}
+            ],
+            backgroundColor: '#4ade80'
+        }]
+    },
+    options: { responsive: true }
+});
+
+// === 4. Asistencias por programa ===
+new Chart(document.getElementById('grafico_programas'), {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for p in asistencias_por_programa %}"{{ p.nombre }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Total asistencias',
+            data: [
+                {% for p in asistencias_por_programa %}{{ p.total }},{% endfor %}
+            ],
+            backgroundColor: '#86efac'
+        }]
+    },
+    options: { responsive: true }
+});
+</script>
+
+{% endblock %}
