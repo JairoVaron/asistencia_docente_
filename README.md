@@ -18,7 +18,7 @@ Antes de ejecutar el proyecto, asegúrate de tener instalado:
 Sigue estos pasos para ejecutar correctamente la aplicación:
 
 1. Clonar el repositorio
-git clone https://github.com/usuario/tu-repositorio.git
+git clone https://github.com/JairoVaron/asistencia_docente_.git
 cd tu-repositorio
 
 2. Crear y activar entorno virtual (opcional, recomendado)
