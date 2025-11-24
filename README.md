@@ -45,6 +45,7 @@ Luego abre:
 http://127.0.0.1:8000/
 
 # Estructura del Proyecto
+```
 AsistenciaDocente/
 │
 │── db.sqlite3
@@ -95,6 +96,7 @@ AsistenciaDocente/
     ├── settings.py
     ├── urls.py
     └── wsgi.py
+```
 
 # Tecnologías Usadas
 •	Python
