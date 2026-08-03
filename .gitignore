@@ -1,0 +1,62 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+.venv/
+
+# =========================
+# Django
+# =========================
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos de logs
+*.log
+
+# Archivos de medios (si los usas)
+media/
+
+# Archivos estáticos recopilados
+staticfiles/
+
+# =========================
+# Cachés y pruebas
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# =========================
+# IDEs y editores
+# =========================
+.vscode/
+.idea/
+*.code-workspace
+
+# =========================
+# Sistema operativo
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Archivos temporales
+# =========================
+*.tmp
+*.bak
+*.swp
+
+# =========================
+# Archivos personales del proyecto
+# =========================
+estructura.txt

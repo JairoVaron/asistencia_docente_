@@ -1,0 +1,350 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Docentes · Asistencia Docente{% endblock %}
+{% block encabezado %}Docentes{% endblock %}
+
+{% block contenido %}
+
+<!--Archivo: docentes.html-->
+
+<style>
+    /* ========================================
+       Hereda tokens de base.html (--ink, --moss, --gold, etc.)
+       ======================================== */
+
+    .franja-titulo {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 26px;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .franja-titulo .eyebrow-seccion {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 4px;
+    }
+
+    .franja-titulo h2 {
+        font-family: var(--font-display);
+        font-size: 24px;
+        font-weight: 600;
+        color: var(--ink);
+        margin: 0;
+    }
+
+    /* Botón principal */
+    .btn-nuevo {
+        background: var(--moss);
+        color: #fff;
+        border: none;
+        font-weight: 600;
+        font-size: 14.5px;
+        padding: 11px 20px;
+        border-radius: var(--radius-signature);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s ease-in-out;
+    }
+    .btn-nuevo:hover {
+        background: var(--moss-deep);
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    /* Caja filtros */
+    .filtros-box {
+        background: #ffffff;
+        padding: 22px;
+        border-radius: var(--radius-signature);
+        margin-bottom: 28px;
+        border: 1px solid var(--line);
+    }
+
+    .filtros-box .campo-label {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    .filtros-box input,
+    .filtros-box select {
+        border-radius: 8px;
+        height: 44px;
+        border: 1px solid var(--line);
+        font-size: 14.5px;
+    }
+
+    .filtros-box input:focus,
+    .filtros-box select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(190, 138, 46, 0.12);
+    }
+
+    .btn-filtrar {
+        background: var(--ink);
+        border: none;
+        height: 44px;
+        font-weight: 600;
+        font-size: 14.5px;
+        border-radius: 8px;
+        color: #fff;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+    }
+    .btn-filtrar:hover {
+        background: var(--moss-deep);
+        color: #fff;
+    }
+
+    /* Tabla */
+    .tabla-envoltorio {
+        background: #fff;
+        border-radius: var(--radius-signature);
+        border: 1px solid var(--line);
+        overflow: hidden;
+    }
+
+    .tabla-verde thead {
+        background: var(--moss-soft);
+    }
+
+    .tabla-verde thead th {
+        font-family: var(--font-mono);
+        font-size: 10.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--moss-deep);
+        font-weight: 600;
+        border-bottom: none;
+    }
+
+    .tabla-verde tbody tr:hover {
+        background-color: #FAFDF9;
+    }
+
+    .tabla-verde td, .tabla-verde th {
+        padding: 14px 16px;
+        vertical-align: middle;
+    }
+
+    .celda-docente {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .avatar-docente {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        border-radius: 50%;
+        background: var(--moss-soft);
+        color: var(--moss-deep);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .celda-doc {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--muted);
+    }
+
+    /* Botones acciones */
+    .btn-editar {
+        background-color: var(--gold-soft);
+        border: 1px solid transparent;
+        padding: 6px 13px;
+        border-radius: 8px;
+        color: #7a5a17;
+        font-weight: 600;
+        font-size: 13px;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-editar:hover {
+        background-color: var(--gold);
+        color: #fff;
+    }
+
+    .btn-eliminar {
+        background-color: transparent;
+        border: 1px solid var(--danger-line);
+        padding: 6px 13px;
+        border-radius: 8px;
+        color: var(--danger);
+        font-weight: 600;
+        font-size: 13px;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-eliminar:hover {
+        background-color: var(--danger);
+        color: #fff;
+        border-color: var(--danger);
+    }
+
+    .btn-pdf {
+        background-color: var(--moss-soft);
+        border: 1px solid transparent;
+        padding: 6px 13px;
+        border-radius: 8px;
+        color: var(--moss-deep);
+        font-weight: 600;
+        font-size: 13px;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .btn-pdf:hover {
+        background-color: var(--moss);
+        color: #fff;
+    }
+
+    .estado-vacio {
+        padding: 48px 20px;
+        text-align: center;
+        color: var(--muted);
+    }
+
+    .estado-vacio i {
+        font-size: 26px;
+        color: var(--line);
+        display: block;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<!-- Título + botón -->
+<div class="franja-titulo">
+    <div>
+        <span class="eyebrow-seccion"><i class="bi bi-person-badge"></i> Cuerpo docente</span>
+        <h2>Docentes</h2>
+    </div>
+    <a href="{% url 'docente_nuevo' %}" class="btn-nuevo">
+        <i class="bi bi-plus-lg"></i> Nuevo docente
+    </a>
+</div>
+
+
+<!-- FILTROS -->
+<div class="filtros-box">
+<form method="get" class="row g-3">
+
+    <div class="col-md-7">
+        <span class="campo-label">Buscar</span>
+        <input type="text" name="busqueda" placeholder="Nombre, apellido o documento..."
+               value="{{ request.GET.busqueda }}" class="form-control">
+    </div>
+
+    <div class="col-md-3">
+        <span class="campo-label">Programa</span>
+        <select name="programa" class="form-select">
+            <option value="">Todos los programas</option>
+            {% for p in programas %}
+                <option value="{{ p.id }}"
+                    {% if request.GET.programa == p.id|stringformat:"s" %}selected{% endif %}>
+                    {{ p.nombre }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn-filtrar w-100">
+            <i class="bi bi-funnel"></i> Filtrar
+        </button>
+    </div>
+
+</form>
+</div>
+
+
+<!-- TABLA DOCENTES -->
+<div class="tabla-envoltorio">
+<div class="table-responsive">
+<table class="table tabla-verde table-hover align-middle mb-0">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Documento</th>
+            <th>Programa</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for d in docentes %}
+        <tr>
+            <td>
+                <div class="celda-docente">
+                    <div class="avatar-docente">{{ d.nombre|slice:":1" }}{{ d.apellido|slice:":1" }}</div>
+                    <span>{{ d.nombre }} {{ d.apellido }}</span>
+                </div>
+            </td>
+            <td class="celda-doc">{{ d.documento|default:"-" }}</td>
+            <td>{{ d.programa.nombre|default:"-" }}</td>
+            <td class="text-center">
+
+                <a href="{% url 'docente_editar' d.id %}" class="btn-editar btn-sm">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+
+                <a href="{% url 'docente_eliminar' d.id %}"
+                   class="btn-eliminar btn-sm"
+                   onclick="return confirm('¿Seguro que deseas eliminar este docente?');">
+                   <i class="bi bi-trash3"></i> Eliminar
+                </a>
+
+                <a href="{% url 'reporte_mensual_docente' d.id 2025 1 %}"
+                   class="btn-pdf btn-sm">
+                   <i class="bi bi-file-earmark-pdf"></i> PDF
+                </a>
+
+            </td>
+        </tr>
+
+    {% empty %}
+        <tr>
+            <td colspan="4">
+                <div class="estado-vacio">
+                    <i class="bi bi-inboxes"></i>
+                    No se encontraron docentes.
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+
+{% endblock %}

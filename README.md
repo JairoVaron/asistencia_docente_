@@ -1,28 +1,166 @@
-# Asistencia-docente
-Un software para manejar la asistencia de los docentes en una institucion educativa
+# Sistema de Gestión de Asistencia Docente
 
-La institución educativa actualmente lleva el control de asistencia de los docentes mediante planillas físicas en papel.
-En estas planillas, cada profesor registra manualmente su nombre, la fecha y hora de ingreso, la fecha y hora de salida, la materia que va a dictar, el tema de la clase, el curso o grado asignado, el día y la jornada.
+Aplicación web desarrollada con **Python y Django** para gestionar el control de asistencia de docentes dentro de una institución educativa. El sistema permite administrar docentes, programas académicos, semestres y registros de asistencia, además de consultar porcentajes de asistencia y generar reportes.
 
-Este método genera diversas dificultades, tales como:
+> **Actualización reciente:** se realizó un **rediseño completo de la interfaz (frontend)** para ofrecer una experiencia visual más moderna, limpia y fácil de usar.
 
-•	Posible pérdida o deterioro de las planillas físicas.
+## Características principales
 
-•	Retrasos al momento de consultar la información, ya que los datos no se encuentran digitalizados.
+* Autenticación de usuarios.
+* Gestión de docentes.
+* Registro de asistencia.
+* Consulta de porcentajes de asistencia.
+* Administración de programas académicos.
+* Administración de semestres.
+* Interfaz responsive con un diseño renovado.
 
-•	Complicaciones para generar reportes, por ejemplo, la asistencia mensual de un docente.
+## Tecnologías utilizadas
 
-•	Falta de seguridad en los registros, pues pueden ser manipulados con facilidad.
+* **Python 3**
+* **Django**
+* **SQLite3**
+* **HTML5**
+* **CSS3**
+* **Bootstrap 5**
+* **JavaScript**
 
-Por estas razones, la institución necesita implementar un software que modernice y optimice este proceso. Con el nuevo sistema se busca:
+## Instalación
 
-•	Automatizar el registro de asistencia de los docentes.
+### 1. Clonar el repositorio
 
-•	Permitir al coordinador y personal administrativo consultar y filtrar registros por fecha, docente, jornada o programa académico.
+```bash
+git clone https://github.com/JairoVaron/asistencia_docente_.git
+cd asistencia_docente_
+```
 
-•	Generar reportes de asistencia individuales o generales en rangos de fecha definidos (por ejemplo, semanal o mensual).
+### 2. Crear un entorno virtual (opcional, recomendado)
 
-•	Almacenar la información en una base de datos centralizada, que permita realizar consultas rápidas, seguras y confiables.
+**Windows**
 
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
 
-De esta manera, el software de asistencia docente solucionará los problemas actuales de control y organización, mejorará la trazabilidad de los registros y optimizará el tiempo destinado a la gestión académica y administrativa.
+**Linux / macOS**
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3. Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+Si no existe el archivo `requirements.txt`, puedes generarlo con:
+
+```bash
+pip freeze > requirements.txt
+```
+
+### 4. Aplicar migraciones
+
+```bash
+python manage.py migrate
+```
+
+### 5. Ejecutar el servidor
+
+```bash
+python manage.py runserver
+```
+
+Abrir en el navegador:
+
+```
+http://127.0.0.1:8000/
+```
+
+## Estructura del proyecto
+
+```text
+AsistenciaDocente/
+│── manage.py
+│── db.sqlite3
+│
+├── app/
+│   ├── models.py
+│   ├── views.py
+│   ├── forms.py
+│   ├── urls.py
+│   ├── templates/
+│   └── static/
+│
+└── asistencia_docente/
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
+```
+
+## Funcionalidades
+
+### Gestión de docentes
+
+* Registrar nuevos docentes.
+* Editar información.
+* Consultar el listado de docentes.
+
+### Control de asistencia
+
+* Registrar hora de entrada y salida.
+* Asociar asignatura, tema y jornada.
+* Consultar registros por fecha y docente.
+
+### Administración académica
+
+* Programas académicos.
+* Semestres.
+* Organización de la información institucional.
+
+## Comandos útiles
+
+Crear un superusuario:
+
+```bash
+python manage.py createsuperuser
+```
+
+Crear nuevas migraciones:
+
+```bash
+python manage.py makemigrations
+```
+
+Aplicar migraciones:
+
+```bash
+python manage.py migrate
+```
+
+## Capturas del sistema
+
+Se recomienda agregar capturas de pantalla del **nuevo diseño** en una carpeta `docs/images/` y mostrarlas aquí para visualizar la interfaz del sistema.
+
+## Problema que resuelve
+
+El sistema reemplaza el registro manual en papel por una plataforma digital que permite:
+
+* Centralizar la información.
+* Consultar registros rápidamente.
+* Generar reportes.
+* Mejorar la seguridad de los datos.
+* Optimizar la gestión académica y administrativa.
+
+## Autor
+
+**Jairo Varón**
+**Jhon Escorcia**
+
+GitHub: https://github.com/JairoVaron
+
+## Licencia
+
+Este proyecto puede utilizarse con fines **educativos y académicos**.

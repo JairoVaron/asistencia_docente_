@@ -1,0 +1,248 @@
+{% extends "control_asistencia/base.html" %}
+
+{% block titulo %}Estadísticas{% endblock %}
+
+{% block contenido %}
+
+<!--Archivo: estadisticas.html-->
+
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+    /* ===================================================
+       IDENTIDAD VISUAL — coherente con el resto del sistema
+       =================================================== */
+    :root {
+        --ink: #1C3829;
+        --moss: #3E7A5A;
+        --moss-deep: #2B5A40;
+        --moss-soft: #EAF2EB;
+        --gold: #BE8A2E;
+        --gold-soft: #F6E8C9;
+        --paper: #FBFAF6;
+        --line: #DCE6DC;
+        --muted: #5B6D62;
+        --clay: #B65C4D;
+        --clay-soft: #F7E7E3;
+    }
+
+    .modulo-wrap { font-family: 'Inter', sans-serif; color: var(--ink); padding: 4px 4px 24px; }
+
+    .modulo-eyebrow {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 11px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--moss-deep);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .modulo-titulo-principal {
+        font-family: 'Fraunces', serif;
+        font-size: 26px;
+        font-weight: 600;
+        color: var(--ink);
+        margin: 0 0 28px;
+    }
+
+    .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 22px;
+    }
+    @media (max-width: 900px) {
+        .stat-grid { grid-template-columns: 1fr; }
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid var(--line);
+        border-radius: 4px 28px 4px 28px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 40px -26px rgba(28,56,41,0.35);
+    }
+
+    .stat-header {
+        background: var(--moss-soft);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .stat-header svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+    .stat-header span {
+        font-family: 'Fraunces', serif;
+        font-weight: 600;
+        font-size: 16px;
+        color: var(--moss-deep);
+    }
+
+    .stat-body { padding: 20px 22px 8px; }
+
+    .stat-full { grid-column: 1 / -1; }
+
+    @media (prefers-reduced-motion: reduce) {
+        .stat-card { transition: none; }
+    }
+</style>
+
+<div class="modulo-wrap">
+
+    <span class="modulo-eyebrow">Analítica</span>
+    <h2 class="modulo-titulo-principal">Estadísticas de asistencias</h2>
+
+    <div class="stat-grid">
+
+        <!-- 1. Presente vs Ausente -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><path d="M8.5 13.5l2 2 4-4.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9"/></svg>
+                <span>Asistencias vs ausencias</span>
+            </div>
+            <div class="stat-body">
+                <canvas id="grafico_asistencias" height="230"></canvas>
+            </div>
+        </div>
+
+        <!-- 2. Top Docentes -->
+        <div class="stat-card">
+            <div class="stat-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><circle cx="12" cy="8.5" r="3.4"/><path d="M5 19.2c1-3.4 3.9-5.4 7-5.4s6 2 7 5.4" stroke-linecap="round"/></svg>
+                <span>Top 10 docentes con más asistencias</span>
+            </div>
+            <div class="stat-body">
+                <canvas id="grafico_docentes" height="230"></canvas>
+            </div>
+        </div>
+
+        <!-- 3. Asistencias por día -->
+        <div class="stat-card stat-full">
+            <div class="stat-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8 3.4v3.2M16 3.4v3.2" stroke-linecap="round"/></svg>
+                <span>Asistencias por día</span>
+            </div>
+            <div class="stat-body">
+                <canvas id="grafico_dias" height="110"></canvas>
+            </div>
+        </div>
+
+        <!-- 4. Asistencias por Programa -->
+        <div class="stat-card stat-full">
+            <div class="stat-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><path d="M4 6.2C6 5 9 4.6 12 5.6c3-1 6-0.6 8 0.6v12c-2-1.2-5-1.6-8-0.6-3-1-6-0.6-8 0.6V6.2Z" stroke-linejoin="round"/><path d="M12 5.6v12"/></svg>
+                <span>Asistencias por programa académico</span>
+            </div>
+            <div class="stat-body">
+                <canvas id="grafico_programas" height="150"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = '#5B6D62';
+
+// === 1. Presentes vs Ausentes ===
+new Chart(document.getElementById('grafico_asistencias'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Presentes', 'Ausentes'],
+        datasets: [{
+            data: [{{ total_presentes }}, {{ total_ausentes }}],
+            backgroundColor: ['#3E7A5A', '#B65C4D'],
+            borderWidth: 0
+        }]
+    },
+    options: {
+        plugins: { legend: { position: 'bottom' } },
+        cutout: '62%'
+    }
+});
+
+// === 2. Asistencias por día ===
+new Chart(document.getElementById('grafico_dias'), {
+    type: 'line',
+    data: {
+        labels: [
+            {% for a in asistencias_por_dia %}"{{ a.fecha }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Asistencias',
+            data: [
+                {% for a in asistencias_por_dia %}{{ a.total }},{% endfor %}
+            ],
+            borderColor: '#3E7A5A',
+            backgroundColor: 'rgba(62, 122, 90, 0.12)',
+            borderWidth: 2,
+            pointBackgroundColor: '#2B5A40',
+            tension: 0.3,
+            fill: true
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { grid: { color: '#EAF2EB' } }, x: { grid: { display: false } } }
+    }
+});
+
+// === 3. Top Docentes ===
+new Chart(document.getElementById('grafico_docentes'), {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for d in asistencias_por_docente %}"{{ d.nombre }} {{ d.apellido }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Total asistencias',
+            data: [
+                {% for d in asistencias_por_docente %}{{ d.total }},{% endfor %}
+            ],
+            backgroundColor: '#BE8A2E',
+            borderRadius: 6
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false } },
+        scales: { x: { grid: { color: '#EAF2EB' } }, y: { grid: { display: false } } }
+    }
+});
+
+// === 4. Asistencias por programa ===
+new Chart(document.getElementById('grafico_programas'), {
+    type: 'bar',
+    data: {
+        labels: [
+            {% for p in asistencias_por_programa %}"{{ p.nombre }}",{% endfor %}
+        ],
+        datasets: [{
+            label: 'Total asistencias',
+            data: [
+                {% for p in asistencias_por_programa %}{{ p.total }},{% endfor %}
+            ],
+            backgroundColor: '#3E7A5A',
+            borderRadius: 6
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { grid: { color: '#EAF2EB' } }, x: { grid: { display: false } } }
+    }
+});
+</script>
+
+{% endblock %}
