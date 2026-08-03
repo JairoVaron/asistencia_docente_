@@ -60,3 +60,8 @@ desktop.ini
 # Archivos personales del proyecto
 # =========================
 estructura.txt
+
+# =========================
+# Comandos locales de Django
+# =========================
+control_asistencia/management/
