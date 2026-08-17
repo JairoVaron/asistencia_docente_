@@ -65,3 +65,9 @@ estructura.txt
 # Comandos locales de Django
 # =========================
 control_asistencia/management/
+
+# =========================
+# Datos de prueba
+# =========================
+asistencias.csv
+db.sqlite3

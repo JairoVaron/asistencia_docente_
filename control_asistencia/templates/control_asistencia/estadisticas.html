@@ -4,245 +4,1275 @@
 
 {% block contenido %}
 
-<!--Archivo: estadisticas.html-->
+<!-- Archivo: estadisticas.html -->
 
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
 <style>
-    /* ===================================================
-       IDENTIDAD VISUAL — coherente con el resto del sistema
-       =================================================== */
+    /* =========================================================
+       IDENTIDAD VISUAL
+       ========================================================= */
+
     :root {
         --ink: #1C3829;
         --moss: #3E7A5A;
         --moss-deep: #2B5A40;
         --moss-soft: #EAF2EB;
+
         --gold: #BE8A2E;
         --gold-soft: #F6E8C9;
+
         --paper: #FBFAF6;
         --line: #DCE6DC;
         --muted: #5B6D62;
+
         --clay: #B65C4D;
         --clay-soft: #F7E7E3;
+
+        --white: #ffffff;
     }
 
-    .modulo-wrap { font-family: 'Inter', sans-serif; color: var(--ink); padding: 4px 4px 24px; }
+    /* =========================================================
+       CONTENEDOR PRINCIPAL
+       ========================================================= */
+    .estadisticas-wrap {
+        width: 100%;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 8px 6px 35px;
+        font-family: 'Inter', sans-serif;
+        color: var(--ink);
+    }
 
-    .modulo-eyebrow {
+    /* =========================================================
+       ENCABEZADO
+       ========================================================= */
+    .estadisticas-eyebrow {
+        display: block;
         font-family: 'JetBrains Mono', monospace;
         font-size: 11px;
+        font-weight: 600;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--moss-deep);
-        font-weight: 600;
-        display: block;
-        margin-bottom: 6px;
+        margin-bottom: 7px;
     }
-
-    .modulo-titulo-principal {
+    .estadisticas-titulo {
         font-family: 'Fraunces', serif;
-        font-size: 26px;
+        font-size: 28px;
         font-weight: 600;
         color: var(--ink);
-        margin: 0 0 28px;
+        margin: 0;
+    }
+    .estadisticas-descripcion {
+        max-width: 720px;
+        margin: 8px 0 28px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.7;
     }
 
-    .stat-grid {
+
+    /* =========================================================
+       TARJETAS DE RESUMEN
+       ========================================================= */
+    .resumen-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 22px;
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
     }
-    @media (max-width: 900px) {
-        .stat-grid { grid-template-columns: 1fr; }
-    }
-
-    .stat-card {
-        background: #ffffff;
+    .resumen-card {
+        position: relative;
+        background: var(--white);
         border: 1px solid var(--line);
-        border-radius: 4px 28px 4px 28px;
+        border-radius: 5px 22px 5px 22px;
+        padding: 20px;
+        min-height: 135px;
         overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
     }
-    .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 20px 40px -26px rgba(28,56,41,0.35);
+    .resumen-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 18px 35px -25px
+            rgba(28, 56, 41, 0.40);
     }
-
-    .stat-header {
-        background: var(--moss-soft);
-        padding: 14px 20px;
+    .resumen-card::after {
+        content: "";
+        position: absolute;
+        right: -35px;
+        bottom: -45px;
+        width: 120px;
+        height: 120px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        opacity: 0.7;
+    }
+    .resumen-icono {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
         display: flex;
         align-items: center;
-        gap: 10px;
-        border-bottom: 1px solid var(--line);
-    }
-
-    .stat-header svg { width: 17px; height: 17px; flex-shrink: 0; }
-
-    .stat-header span {
-        font-family: 'Fraunces', serif;
-        font-weight: 600;
-        font-size: 16px;
+        justify-content: center;
+        margin-bottom: 13px;
+        background: var(--moss-soft);
         color: var(--moss-deep);
     }
+    .resumen-icono svg {
+        width: 19px;
+        height: 19px;
+    }
+    .resumen-card.ausencias .resumen-icono {
+        background: var(--clay-soft);
+        color: var(--clay);
+    }
+    .resumen-card.porcentaje .resumen-icono {
+        background: var(--gold-soft);
+        color: var(--gold);
+    }
+    .resumen-card.registros .resumen-icono {
+        background: #EEF0E8;
+        color: var(--ink);
+    }
+    .resumen-label {
+        display: block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 5px;
+    }
+    .resumen-valor {
+        font-family: 'Fraunces', serif;
+        font-size: 28px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--ink);
+    }
 
-    .stat-body { padding: 20px 22px 8px; }
+    /* =========================================================
+       GRID DE GRÁFICAS
+       ========================================================= */
+    .graficas-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
 
-    .stat-full { grid-column: 1 / -1; }
+    /* =========================================================
+       TARJETAS DE GRÁFICAS
+       ========================================================= */
+    .grafica-card {
+        min-width: 0;
+        background: var(--white);
+        border: 1px solid var(--line);
+        border-radius: 5px 28px 5px 28px;
+        overflow: hidden;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+    .grafica-card:hover {
+        transform: translateY(-2px);
+        box-shadow:
+            0 20px 40px -28px
+            rgba(28, 56, 41, 0.35);
+    }
+    .grafica-card.ancho-completo {
+        grid-column: 1 / -1;
+    }
 
+    /* =========================================================
+       CABECERA DE GRÁFICA
+       ========================================================= */
+    .grafica-header {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 15px 20px;
+        background: var(--moss-soft);
+        border-bottom: 1px solid var(--line);
+    }
+    .grafica-header-icon {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.72);
+        color: var(--moss-deep);
+    }
+    .grafica-header-icon svg {
+        width: 17px;
+        height: 17px;
+    }
+    .grafica-header-text {
+        min-width: 0;
+    }
+    .grafica-header-title {
+        display: block;
+        font-family: 'Fraunces', serif;
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.2;
+        color: var(--moss-deep);
+    }
+    .grafica-header-subtitle {
+        display: block;
+        margin-top: 3px;
+        font-size: 11.5px;
+        color: var(--muted);
+    }
+
+    /* =========================================================
+       CUERPO DE LAS GRÁFICAS
+       ========================================================= */
+    .grafica-body {
+        position: relative;
+        padding: 20px;
+    }
+
+    /*
+       IMPORTANTE
+    */
+    .grfica-container {
+        position: relative;
+        width: 100%;
+        height: 300px;
+    }
+    .grafica-container.grafica-dona {
+        height: 320px;
+    }
+    .grafica-container.grafica-linea {
+        height: 330px;
+    }
+    .grafica-container.grafica-docentes {
+        height: 360px;
+    }
+    .grafica-container.grafica-programas {
+        height: 360px;
+    }
+    .grafica-container canvas {
+        display: block;
+
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    /* =========================================================
+       MENSAJE CUANDO NO HAY DATOS
+       ========================================================= */
+    .sin-datos {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: var(--muted);
+        padding: 30px;
+    }
+    .sin-datos svg {
+        width: 38px;
+        height: 38px;
+        margin-bottom: 12px;
+        opacity: 0.55;
+    }
+    .sin-datos strong {
+        font-family: 'Fraunces', serif;
+        font-size: 17px;
+        color: var(--ink);
+        margin-bottom: 4px;
+    }
+    .sin-datos span {
+        font-size: 13px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+    @media (max-width: 1100px) {
+        .resumen-grid {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+    }
+    @media (max-width: 900px) {
+        .graficas-grid {
+            grid-template-columns: 1fr;
+        }
+        .grafica-card.ancho-completo {
+            grid-column: auto;
+        }
+    }
+    @media (max-width: 600px) {
+        .estadisticas-wrap {
+            padding:
+                4px 2px 25px;
+        }
+        .estadisticas-titulo {
+            font-size: 24px;
+        }
+        .estadisticas-descripcion {
+            font-size: 13px;
+            margin-bottom: 22px;
+        }
+        .resumen-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        .resumen-card {
+            min-height: 120px;
+        }
+        .grafica-body {
+            padding: 14px;
+        }
+        .grafica-container {
+            height: 280px;
+        }
+        .grafica-container.grafica-dona {
+            height: 285px;
+        }
+        .grafica-container.grafica-linea {
+            height: 290px;
+        }
+        .grafica-container.grafica-docentes {
+            height: 390px;
+        }
+        .grafica-container.grafica-programas {
+            height: 330px;
+        }
+    }
     @media (prefers-reduced-motion: reduce) {
-        .stat-card { transition: none; }
+        .resumen-card,
+        .grafica-card {
+            transition: none;
+        }
     }
 </style>
 
-<div class="modulo-wrap">
 
-    <span class="modulo-eyebrow">Analítica</span>
-    <h2 class="modulo-titulo-principal">Estadísticas de asistencias</h2>
+<div class="estadisticas-wrap">
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+    <span class="estadisticas-eyebrow">
+        Analítica
+    </span>
 
-    <div class="stat-grid">
+    <h2 class="estadisticas-titulo">
+        Estadísticas de asistencia
+    </h2>
 
-        <!-- 1. Presente vs Ausente -->
-        <div class="stat-card">
-            <div class="stat-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><path d="M8.5 13.5l2 2 4-4.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9"/></svg>
-                <span>Asistencias vs ausencias</span>
+    <p class="estadisticas-descripcion">
+        Consulta de forma visual el comportamiento de la asistencia
+        docente, los registros realizados y su distribución por
+        docentes, fechas y programas académicos.
+    </p>
+
+    <!-- =====================================================
+         RESUMEN GENERAL
+         ===================================================== -->
+    <div class="resumen-grid">
+
+        <!-- PRESENTES -->
+        <div class="resumen-card">
+            <div class="resumen-icono">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6">
+
+                    <circle cx="12" cy="12" r="9"></circle>
+
+                    <path
+                        d="M8.5 12.2l2.2 2.2 4.8-5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round">
+                    </path>
+
+                </svg>
             </div>
-            <div class="stat-body">
-                <canvas id="grafico_asistencias" height="230"></canvas>
+
+            <span class="resumen-label">
+                Presentes
+            </span>
+            <div
+                class="resumen-valor"
+                id="resumen-presentes">
+                {{ total_presentes }}
             </div>
         </div>
 
-        <!-- 2. Top Docentes -->
-        <div class="stat-card">
-            <div class="stat-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><circle cx="12" cy="8.5" r="3.4"/><path d="M5 19.2c1-3.4 3.9-5.4 7-5.4s6 2 7 5.4" stroke-linecap="round"/></svg>
-                <span>Top 10 docentes con más asistencias</span>
+        <!-- AUSENTES -->
+        <div class="resumen-card ausencias">
+            <div class="resumen-icono">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6">
+
+                    <circle cx="12" cy="12" r="9"></circle>
+
+                    <path
+                        d="M9 9l6 6M15 9l-6 6"
+                        stroke-linecap="round">
+                    </path>
+                </svg>
             </div>
-            <div class="stat-body">
-                <canvas id="grafico_docentes" height="230"></canvas>
+
+            <span class="resumen-label">
+                Ausentes
+            </span>
+
+            <div
+                class="resumen-valor"
+                id="resumen-ausentes">
+
+                {{ total_ausentes }}
             </div>
         </div>
 
-        <!-- 3. Asistencias por día -->
-        <div class="stat-card stat-full">
-            <div class="stat-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9.5h16M8 3.4v3.2M16 3.4v3.2" stroke-linecap="round"/></svg>
-                <span>Asistencias por día</span>
+        <!-- PORCENTAJE -->
+        <div class="resumen-card porcentaje">
+            <div class="resumen-icono">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6">
+
+                    <path
+                        d="M7 17L17 7"
+                        stroke-linecap="round">
+                    </path>
+
+                    <circle cx="7.5" cy="7.5" r="2.5"></circle>
+
+                    <circle cx="16.5" cy="16.5" r="2.5"></circle>
+
+                </svg>
             </div>
-            <div class="stat-body">
-                <canvas id="grafico_dias" height="110"></canvas>
+
+            <span class="resumen-label">
+                Porcentaje de asistencia
+            </span>
+
+            <div
+                class="resumen-valor"
+                id="resumen-porcentaje">
+
+                0%
             </div>
         </div>
 
-        <!-- 4. Asistencias por Programa -->
-        <div class="stat-card stat-full">
-            <div class="stat-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="#2B5A40" stroke-width="1.4"><path d="M4 6.2C6 5 9 4.6 12 5.6c3-1 6-0.6 8 0.6v12c-2-1.2-5-1.6-8-0.6-3-1-6-0.6-8 0.6V6.2Z" stroke-linejoin="round"/><path d="M12 5.6v12"/></svg>
-                <span>Asistencias por programa académico</span>
+        <!-- TOTAL REGISTROS -->
+        <div class="resumen-card registros">
+            <div class="resumen-icono">
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.6">
+
+                    <rect
+                        x="4"
+                        y="4"
+                        width="16"
+                        height="16"
+                        rx="2">
+                    </rect>
+
+                    <path
+                        d="M8 9h8M8 13h8M8 17h5"
+                        stroke-linecap="round">
+                    </path>
+                </svg>
             </div>
-            <div class="stat-body">
-                <canvas id="grafico_programas" height="150"></canvas>
+
+            <span class="resumen-label">
+                Total de registros
+            </span>
+
+            <div
+                class="resumen-valor"
+                id="resumen-registros">
+
+                0
+
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         GRÁFICAS
+         ===================================================== -->
+    <div class="graficas-grid">
+        <!-- =================================================
+             1. PRESENTES VS AUSENTES
+             ================================================= -->
+
+        <div class="grafica-card">
+            <div class="grafica-header">
+                <div class="grafica-header-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.4">
+
+                        <circle cx="12" cy="12" r="9"></circle>
+
+                        <path
+                            d="M12 12V3"
+                            stroke-linecap="round">
+                        </path>
+
+                        <path
+                            d="M12 12l7.5 4.5"
+                            stroke-linecap="round">
+                        </path>
+
+                    </svg>
+                </div>
+                <div class="grafica-header-text">
+
+                    <span class="grafica-header-title">
+                        Asistencias vs ausencias
+                    </span>
+
+                    <span class="grafica-header-subtitle">
+                        Distribución general de los registros
+                    </span>
+                </div>
+            </div>
+
+            <div class="grafica-body">
+                <div class="grafica-container grafica-dona">
+
+                    <canvas id="grafico_asistencias"></canvas>
+
+                </div>
             </div>
         </div>
 
+        <!-- =================================================
+             2. TOP DOCENTES
+             ================================================= -->
+        <div class="grafica-card">
+            <div class="grafica-header">
+                <div class="grafica-header-icon">
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.4">
+
+                        <circle cx="12" cy="8" r="3"></circle>
+
+                        <path
+                            d="M5 19c.8-3.4 3.3-5.2 7-5.2s6.2 1.8 7 5.2"
+                            stroke-linecap="round">
+                        </path>
+
+                    </svg>
+                </div>
+
+                <div class="grafica-header-text">
+
+                    <span class="grafica-header-title">
+                        Docentes con más asistencias
+                    </span>
+
+                    <span class="grafica-header-subtitle">
+                        Top 10 según registros acumulados
+                    </span>
+                </div>
+            </div>
+
+            <div class="grafica-body">
+                <div class="grafica-container grafica-docentes">
+
+                    <canvas id="grafico_docentes"></canvas>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================
+             3. ASISTENCIAS POR DÍA
+             ================================================= -->
+        <div class="grafica-card ancho-completo">
+            <div class="grafica-header">
+                <div class="grafica-header-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.4">
+
+                        <rect
+                            x="4"
+                            y="5"
+                            width="16"
+                            height="15"
+                            rx="2">
+                        </rect>
+
+                        <path
+                            d="M4 9.5h16M8 3.5v3M16 3.5v3"
+                            stroke-linecap="round">
+                        </path>
+
+                    </svg>
+                </div>
+
+                <div class="grafica-header-text">
+
+                    <span class="grafica-header-title">
+                        Evolución de asistencias por día
+                    </span>
+
+                    <span class="grafica-header-subtitle">
+                        Comportamiento de los registros a través del tiempo
+                    </span>
+                </div>
+            </div>
+
+            <div class="grafica-body">
+                <div class="grafica-container grafica-linea">
+
+                    <canvas id="grafico_dias"></canvas>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- =================================================
+             4. ASISTENCIAS POR PROGRAMA
+             ================================================= -->
+        <div class="grafica-card ancho-completo">
+            <div class="grafica-header">
+                <div class="grafica-header-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.4">
+
+                        <path
+                            d="M4 6.2C6.3 5 9.2 4.7 12 5.7c2.8-1 5.7-.7 8 .5v12c-2.3-1.2-5.2-1.5-8-.5-2.8-1-5.7-.7-8 .5v-12Z"
+                            stroke-linejoin="round">
+                        </path>
+
+                        <path
+                            d="M12 5.7v12"
+                            stroke-linecap="round">
+                        </path>
+
+                    </svg>
+                </div>
+
+                <div class="grafica-header-text">
+
+                    <span class="grafica-header-title">
+                        Asistencias por programa académico
+                    </span>
+
+                    <span class="grafica-header-subtitle">
+                        Comparación de registros entre programas
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="grafica-body">
+
+                <div class="grafica-container grafica-programas">
+
+                    <canvas id="grafico_programas"></canvas>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Chart.js -->
+<!-- =========================================================
+     CHART.JS
+     ========================================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-Chart.defaults.font.family = "'Inter', sans-serif";
-Chart.defaults.color = '#5B6D62';
+document.addEventListener('DOMContentLoaded', function () {
 
-// === 1. Presentes vs Ausentes ===
-new Chart(document.getElementById('grafico_asistencias'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Presentes', 'Ausentes'],
-        datasets: [{
-            data: [{{ total_presentes }}, {{ total_ausentes }}],
-            backgroundColor: ['#3E7A5A', '#B65C4D'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        plugins: { legend: { position: 'bottom' } },
-        cutout: '62%'
+    /* =====================================================
+       CONFIGURACIÓN GENERAL
+       ===================================================== */
+    Chart.defaults.font.family = "'Inter', sans-serif";
+    Chart.defaults.color = '#5B6D62';
+    Chart.defaults.animation.duration = 700;
+
+    /* =====================================================
+       DATOS GENERALES
+       ===================================================== */
+    const totalPresentes = Number("{{ total_presentes|default:0 }}");
+    const totalAusentes = Number("{{ total_ausentes|default:0 }}");
+    const totalRegistros =
+        totalPresentes + totalAusentes;
+
+    let porcentajeAsistencia = 0;
+
+    if (totalRegistros > 0) {
+        porcentajeAsistencia =
+            (totalPresentes / totalRegistros) * 100;
     }
+
+    /* =====================================================
+       TARJETAS DE RESUMEN
+       ===================================================== */
+    document.getElementById(
+        'resumen-registros'
+    ).textContent =
+        totalRegistros.toLocaleString('es-CO');
+    document.getElementById(
+        'resumen-porcentaje'
+    ).textContent =
+        porcentajeAsistencia.toFixed(1) + '%';
+
+    /* =====================================================
+       PLUGIN PARA MOSTRAR PORCENTAJE EN EL CENTRO
+       ===================================================== */
+    const centroDonaPlugin = {
+
+        id: 'centroDona',
+
+        afterDraw(chart) {
+
+            if (chart.config.type !== 'doughnut') {
+                return;
+            }
+
+            const {
+                ctx
+            } = chart;
+
+            const meta =
+                chart.getDatasetMeta(0);
+
+            if (!meta.data.length) {
+                return;
+            }
+
+            const x =
+                meta.data[0].x;
+            const y =
+                meta.data[0].y;
+
+
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.font =
+                "600 26px 'Fraunces', serif";
+
+            ctx.fillStyle =
+                '#1C3829';
+
+            ctx.fillText(
+                porcentajeAsistencia.toFixed(1) + '%',
+                x,
+                y - 5
+            );
+
+
+            ctx.font =
+                "500 10px 'JetBrains Mono', monospace";
+
+            ctx.fillStyle =
+                '#5B6D62';
+
+            ctx.fillText(
+                'ASISTENCIA',
+                x,
+                y + 18
+            );
+
+            ctx.restore();
+        }
+    };
+
+    Chart.register(centroDonaPlugin);
+
+    /* =====================================================
+       1. PRESENTES VS AUSENTES
+       ===================================================== */
+    const canvasAsistencias =
+        document.getElementById(
+            'grafico_asistencias'
+        );
+
+    if (canvasAsistencias) {
+
+        new Chart(
+            canvasAsistencias,
+            {
+                type: 'doughnut',
+
+                data: {
+                    labels: [
+                        'Presentes',
+                        'Ausentes'
+                    ],
+
+                    datasets: [
+                        {
+                            data: [
+                                totalPresentes,
+                                totalAusentes
+                            ],
+
+                            backgroundColor: [
+                                '#3E7A5A',
+                                '#B65C4D'
+                            ],
+
+                            hoverBackgroundColor: [
+                                '#2B5A40',
+                                '#9E4D40'
+                            ],
+
+                            borderWidth: 0,
+
+                            spacing: 3
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '68%',
+
+                    layout: {
+                        padding: 15
+                    },
+
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const value =
+                                        context.raw;
+
+                                    const total =
+                                        context.dataset.data
+                                            .reduce(
+                                                (a, b) =>
+                                                    a + b,
+                                                0
+                                            );
+
+                                    const porcentaje =
+                                        total > 0
+                                            ? (
+                                                value /
+                                                total *
+                                                100
+                                            ).toFixed(1)
+                                            : 0;
+
+                                    return (
+                                        ' ' +
+                                        context.label +
+                                        ': ' +
+                                        value +
+                                        ' (' +
+                                        porcentaje +
+                                        '%)'
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+
+    /* =====================================================
+       2. ASISTENCIAS POR DÍA
+       ===================================================== */
+    const fechas = [
+
+        {% for a in asistencias_por_dia %}
+            "{{ a.fecha|escapejs }}"
+            {% if not forloop.last %},{% endif %}
+            {% endfor %}
+    ];
+
+    const totalesDias = [
+        {% for a in asistencias_por_dia %}
+            {{ a.total|default:0 }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const canvasDias =
+        document.getElementById(
+            'grafico_dias'
+        );
+
+    if (canvasDias) {
+
+        new Chart(
+            canvasDias,
+            {
+                type: 'line',
+
+                data: {
+
+                    labels: fechas,
+                    datasets: [
+                        {
+                            label: 'Asistencias',
+                            data: totalesDias,
+                            borderColor: '#3E7A5A',
+                            backgroundColor:
+                                'rgba(62, 122, 90, 0.10)',
+                            borderWidth: 2.5,
+                            pointBackgroundColor:
+                                '#2B5A40',
+                            pointBorderColor:
+                                '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            tension: 0.35,
+                            fill: true
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+                            backgroundColor:
+                                '#1C3829',
+
+                            titleFont: {
+                                family:
+                                    "'Fraunces', serif",
+                                size: 14
+                            },
+
+                            bodyFont: {
+                                family:
+                                    "'Inter', sans-serif",
+                                size: 12
+                            },
+
+                            padding: 12,
+                            displayColors: false
+                        }
+                    },
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                padding: 8
+                            },
+
+                            grid: {
+                                color: '#EAF2EB'
+                            },
+
+                            border: {
+                                display: false
+                            }
+                        },
+
+                        x: {
+                            ticks: {
+                                maxRotation: 0,
+                                autoSkip: true,
+                                maxTicksLimit: 12,
+                                padding: 8
+                            },
+
+                            grid: {
+                                display: false
+                            },
+
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    /* =====================================================
+       3. TOP DOCENTES
+       ===================================================== */
+    const docentes = [
+        {% for d in asistencias_por_docente %}
+            "{{ d.nombre|escapejs }} {{ d.apellido|escapejs }}"
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const totalesDocentes = [
+        {% for d in asistencias_por_docente %}
+            {{ d.total|default:0 }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const canvasDocentes =
+        document.getElementById(
+            'grafico_docentes'
+        );
+
+    if (canvasDocentes) {
+        new Chart(
+            canvasDocentes,
+            {
+                type: 'bar',
+
+                data: {
+                    labels: docentes,
+                    datasets: [
+
+                        {
+                            label:
+                                'Total asistencias',
+                            data:
+                                totalesDocentes,
+                            backgroundColor:
+                                '#BE8A2E',
+                            hoverBackgroundColor:
+                                '#A77725',
+                            borderRadius: 7,
+                            borderSkipped: false,
+                            barPercentage: 0.65,
+                            categoryPercentage: 0.75
+                        }
+                    ]
+                },
+
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+                            backgroundColor:
+                                '#1C3829',
+                            padding: 11,
+                            displayColors: false
+                        }
+                    },
+
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                padding: 8
+                            },
+
+                            grid: {
+                                color: '#EAF2EB'
+                            },
+
+                            border: {
+                                display: false
+                            }
+                        },
+
+                        y: {
+                            ticks: {
+                                padding: 8,
+                                font: {
+                                    size: 11
+                                }
+                            },
+
+                            grid: {
+                                display: false
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+
+    /* =====================================================
+       4. ASISTENCIAS POR PROGRAMA
+       ===================================================== */
+    const programas = [
+        {% for p in asistencias_por_programa %}
+            "{{ p.nombre|escapejs }}"
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const totalesProgramas = [
+        {% for p in asistencias_por_programa %}
+            {{ p.total|default:0 }}
+            {% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const canvasProgramas =
+        document.getElementById(
+            'grafico_programas'
+        );
+
+    if (canvasProgramas) {
+        new Chart(
+            canvasProgramas,
+            {
+                type: 'bar',
+                data: {
+
+                    labels: programas,
+                    datasets: [
+
+                        {
+                            label:
+                                'Total asistencias',
+                            data:
+                                totalesProgramas,
+                            backgroundColor:
+                                '#3E7A5A',
+                            hoverBackgroundColor:
+                                '#2B5A40',
+                            borderRadius: 7,
+                            borderSkipped: false,
+                            barPercentage: 0.60,
+                            categoryPercentage: 0.75
+                        }
+                    ]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+
+                        tooltip: {
+                            backgroundColor:
+                                '#1C3829',
+                            padding: 11,
+                            displayColors: false
+                        }
+                    },
+
+                    scales: {
+
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                padding: 8
+                            },
+
+                            grid: {
+                                color: '#EAF2EB'
+                            },
+
+                            border: {
+                                display: false
+                            }
+
+                        },
+
+                        x: {
+
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 35,
+                                minRotation: 0,
+                                padding: 8,
+                                font: {
+                                    size: 11
+                                }
+                            },
+
+                            grid: {
+                                display: false
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            }
+        );
+    }
+
 });
 
-// === 2. Asistencias por día ===
-new Chart(document.getElementById('grafico_dias'), {
-    type: 'line',
-    data: {
-        labels: [
-            {% for a in asistencias_por_dia %}"{{ a.fecha }}",{% endfor %}
-        ],
-        datasets: [{
-            label: 'Asistencias',
-            data: [
-                {% for a in asistencias_por_dia %}{{ a.total }},{% endfor %}
-            ],
-            borderColor: '#3E7A5A',
-            backgroundColor: 'rgba(62, 122, 90, 0.12)',
-            borderWidth: 2,
-            pointBackgroundColor: '#2B5A40',
-            tension: 0.3,
-            fill: true
-        }]
-    },
-    options: {
-        plugins: { legend: { display: false } },
-        scales: { y: { grid: { color: '#EAF2EB' } }, x: { grid: { display: false } } }
-    }
-});
-
-// === 3. Top Docentes ===
-new Chart(document.getElementById('grafico_docentes'), {
-    type: 'bar',
-    data: {
-        labels: [
-            {% for d in asistencias_por_docente %}"{{ d.nombre }} {{ d.apellido }}",{% endfor %}
-        ],
-        datasets: [{
-            label: 'Total asistencias',
-            data: [
-                {% for d in asistencias_por_docente %}{{ d.total }},{% endfor %}
-            ],
-            backgroundColor: '#BE8A2E',
-            borderRadius: 6
-        }]
-    },
-    options: {
-        indexAxis: 'y',
-        plugins: { legend: { display: false } },
-        scales: { x: { grid: { color: '#EAF2EB' } }, y: { grid: { display: false } } }
-    }
-});
-
-// === 4. Asistencias por programa ===
-new Chart(document.getElementById('grafico_programas'), {
-    type: 'bar',
-    data: {
-        labels: [
-            {% for p in asistencias_por_programa %}"{{ p.nombre }}",{% endfor %}
-        ],
-        datasets: [{
-            label: 'Total asistencias',
-            data: [
-                {% for p in asistencias_por_programa %}{{ p.total }},{% endfor %}
-            ],
-            backgroundColor: '#3E7A5A',
-            borderRadius: 6
-        }]
-    },
-    options: {
-        plugins: { legend: { display: false } },
-        scales: { y: { grid: { color: '#EAF2EB' } }, x: { grid: { display: false } } }
-    }
-});
 </script>
 
 {% endblock %}
